@@ -1,0 +1,125 @@
+                                w3 schools sql task
+2)Display a single relation with: OrderId, OrderDate, CustomerName, City, Address, PostalCode, ShipperName,
+ ProductName, Quantity.
+answer : 
+select orders.OrderId, orders.OrderDate, customers.CustomerName, customers.City, customers.Address, customers.PostalCode, shippers.ShipperName, products.ProductName, orderdetails.Quantity
+FROM customers
+JOIN orders on customers.customerid=orders.customerid
+JOIN shippers on shippers.shipperid=orders.shipperid
+join orderdetails on orderdetails.orderid=orders.orderid
+join products on products.productid=orderdetails.productid;
+
+3)Display all products ever been ordered and display the shipper name.
+
+answer :
+
+select products.productname,shippers.ShipperName
+FROM customers
+JOIN orders on customers.customerid=orders.customerid
+JOIN shippers on shippers.shipperid=orders.shipperid
+join orderdetails on orderdetails.orderid=orders.orderid
+join products on products.productid=orderdetails.productid
+GROUP BY productname;
+
+4)Display the count of all products shipped by each of the 3 shippers.
+
+answer:
+select shippers.shippername,count(products.productname)
+FROM orders
+JOIN shippers on shippers.shipperid=orders.shipperid
+join orderdetails on orderdetails.orderid=orders.orderid
+join products on products.productid=orderdetails.productid
+group by ShipperName ;
+
+5)How many customers DO NOT have the words ‘son’ in their CustomerName
+answer:
+SELECT * FROM Customers
+WHERE NOT CustomerName = '%son%';
+
+ 6)Find the total sales made in the year 1997
+answer: 
+SELECT orders.orderdate,sum(orderdetails.quantity*products.price) as sales
+FROM Orders
+JOIN orderdetails on orderdetails.orderid=Orders.orderid
+JOIN products on products.productid=orderdetails.productid
+where orderdate like '1997%' 
+
+7)Display each customer_name and total_amount ever spent in the business, from highest amount.
+answer:
+SELECT customers.customername,sum(orderdetails.quantity*products.price) as total_amount
+FROM customers
+JOIN orders on customers.customerid=orders.customerid
+JOIN orderdetails on orderdetails.orderid=Orders.orderid
+JOIN products on products.productid=orderdetails.productid
+group by customername
+order by total_amount DESC
+
+8)Find the top supplier of the business (in terms of products ordered)
+answer:
+SELECT suppliers.suppliername,count(products.productname) as products,orderdetails.quantity 
+FROM customers
+JOIN orders on customers.customerid=orders.customerid
+JOIN orderdetails on orderdetails.orderid=Orders.orderid
+JOIN products on products.productid=orderdetails.productid
+JOIN suppliers on suppliers.supplierid=products.supplierid
+GROUP BY suppliername
+ORDER BY products DESC
+limit 1;
+
+9) Find the total sales of each product
+answer:
+SELECT productname,sum(price*quantity) as sales
+FROM customers
+JOIN orders on customers.customerid=orders.customerid
+JOIN orderdetails on orderdetails.orderid=Orders.orderid
+JOIN products on products.productid=orderdetails.productid
+GROUP BY productname
+
+**10)Find the best performing month in the business in terms of sales. Hint: Use substr() on the date to slice
+answer: 
+SELECT substr(orderdate, 6, 2) AS ordermonth,sum(orderdetails.quantity*products.price) as sales
+FROM customers
+JOIN orders on customers.customerid=orders.customerid
+JOIN orderdetails on orderdetails.orderid=Orders.orderid
+JOIN products on products.productid=orderdetails.productid
+GROUP BY ordermonth
+ORDER BY sales DESC
+limit 1;
+11)Find the total sales per day
+answer:
+SELECT orderdate,sum(orderdetails.quantity*products.price) as sales
+FROM customers
+JOIN orders on customers.customerid=orders.customerid
+JOIN orderdetails on orderdetails.orderid=Orders.orderid
+JOIN products on products.productid=orderdetails.productid
+GROUP BY orderdate;
+
+12)Find the total Sales for each Customer, the ones who have never ordered leave as 0
+answer:
+SELECT customername,sum(orderdetails.quantity*products.price) as sales
+FROM customers
+JOIN orders on customers.customerid=orders.customerid
+JOIN orderdetails on orderdetails.orderid=Orders.orderid
+JOIN products on products.productid=orderdetails.productid
+group by customername
+
+12)Find the total Sales for each Customer, the ones who have never ordered leave as 0
+answer:
+SELECT orderdate,sum(orderdetails.quantity*products.price) as sales
+FROM customers
+JOIN orders on customers.customerid=orders.customerid
+JOIN orderdetails on orderdetails.orderid=Orders.orderid
+JOIN products on products.productid=orderdetails.productid
+GROUP BY orderdate
+
+13)In the same database, create the table payments and determine the foreign key, 
+any relevant columns and their respective data types. Insert at least 5 records
+
+answer:
+CREATE TABLE Payments (
+    paymentid int,
+    orderdetailid int,
+    orderdate varchar(255)
+);
+insert into payments(paymentid,orderdetailid,orderdate)
+values(5,5,'1996-07-25')
